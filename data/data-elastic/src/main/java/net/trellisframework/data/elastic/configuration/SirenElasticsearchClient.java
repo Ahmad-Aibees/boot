@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 
 public class SirenElasticsearchClient extends ElasticsearchClient {
 
+    public static volatile Long taskTimeoutMillis = 300000L;
+
     public static final SimpleEndpoint<SearchRequest, ?> _SEARCH_ENDPOINT = new SimpleEndpoint<>("es/search", request -> "POST",
 
             request -> {
@@ -68,6 +70,9 @@ public class SirenElasticsearchClient extends ElasticsearchClient {
             request -> {
                 Map<String, String> params = new HashMap<>();
                 params.put("typed_keys", "true");
+                if (taskTimeoutMillis != null && taskTimeoutMillis > 0) {
+                    params.put("task_timeout", String.valueOf(taskTimeoutMillis));
+                }
                 if (request.df() != null) {
                     params.put("df", request.df());
                 }
@@ -169,6 +174,9 @@ public class SirenElasticsearchClient extends ElasticsearchClient {
             request -> {
                 Map<String, String> params = new HashMap<>();
                 params.put("typed_keys", "true");
+                if (taskTimeoutMillis != null && taskTimeoutMillis > 0) {
+                    params.put("task_timeout", String.valueOf(taskTimeoutMillis));
+                }
                 if (request.routing() != null) {
                     params.put("routing", request.routing());
                 }
